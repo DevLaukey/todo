@@ -6,18 +6,8 @@ import React, { useState } from "react";
 import { nanoid } from "nanoid";
 
 
-
 function App(props) {
-  const FILTER_MAP = {
-    All: () => true,
-    Active: (task) => !task.completed,
-    Completed: (task) => task.completed,
-  };
-  
-  const FILTER_NAMES = Object.keys(FILTER_MAP);
   const [tasks, setTasks] = useState(props.tasks);
-  const [filter, setFilter] = useState("All");
-
 
   function toggleTaskCompleted(id) {
      const updatedTasks = tasks.map((task) => {
@@ -31,27 +21,15 @@ function App(props) {
      });
      setTasks(updatedTasks);
   }
-  const taskList = tasks
-    .filter(FILTER_MAP[filter])
-    .map((task) => (
-      <Todo
-        id={task.id}
-        name={task.name}
-        completed={task.completed}
-        key={task.id}
-        toggleTaskCompleted={toggleTaskCompleted}
-        deleteTask={deleteTask}
-        editTask={editTask}
-      />
-    ));
-const filterList = FILTER_NAMES.map((name) => (
-  <FilterButton
-    key={name}
-    name={name}
-    isPressed={name === filter}
-    setFilter={setFilter}
-  />
-));
+  const taskList = tasks.map((task) => (
+    <Todo
+      id={task.id}
+      name={task.name}
+      completed={task.completed}
+      key={task.id}
+      toggleTaskCompleted={toggleTaskCompleted}
+    />
+  ));
 
   function addTask(name) {
    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
@@ -77,8 +55,12 @@ const filterList = FILTER_NAMES.map((name) => (
   return (
     <div className="todoapp stack-large">
       <h1>TodoMatic</h1>
-      <Form addTask={addTask} deleteTask={deleteTask} editTask={editTask} />
-      <div className="filters btn-group stack-exception">{filterList}</div>
+      <Form addTask={addTask} />
+      <div className="filters btn-group stack-exception">
+        <FilterButton />
+        <FilterButton />
+        <FilterButton />
+      </div>
       <h2 id="list-heading">{headingText}</h2>
       <ul
         className="todo-list stack-large stack-exception"

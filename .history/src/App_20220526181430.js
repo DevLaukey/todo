@@ -6,15 +6,15 @@ import React, { useState } from "react";
 import { nanoid } from "nanoid";
 
 
+const FILTER_MAP = {
+  All: () => true,
+  Active: (task) => !task.completed,
+  Completed: (task) => task.completed,
+};
+
+const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 function App(props) {
-  const FILTER_MAP = {
-    All: () => true,
-    Active: (task) => !task.completed,
-    Completed: (task) => task.completed,
-  };
-  
-  const FILTER_NAMES = Object.keys(FILTER_MAP);
   const [tasks, setTasks] = useState(props.tasks);
   const [filter, setFilter] = useState("All");
 
@@ -31,27 +31,20 @@ function App(props) {
      });
      setTasks(updatedTasks);
   }
-  const taskList = tasks
-    .filter(FILTER_MAP[filter])
-    .map((task) => (
-      <Todo
-        id={task.id}
-        name={task.name}
-        completed={task.completed}
-        key={task.id}
-        toggleTaskCompleted={toggleTaskCompleted}
-        deleteTask={deleteTask}
-        editTask={editTask}
-      />
-    ));
-const filterList = FILTER_NAMES.map((name) => (
-  <FilterButton
-    key={name}
-    name={name}
-    isPressed={name === filter}
-    setFilter={setFilter}
-  />
-));
+  const taskList = tasks.map((task) => (
+    <Todo
+      id={task.id}
+      name={task.name}
+      completed={task.completed}
+      key={task.id}
+      toggleTaskCompleted={toggleTaskCompleted}
+      deleteTask={deleteTask}
+      editTask={editTask}
+    />
+  ));
+  const filterList = FILTER_NAMES.map((name) => (
+    <FilterButton key={name} name={name} />
+  ));
 
   function addTask(name) {
    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
